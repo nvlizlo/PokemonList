@@ -36,6 +36,23 @@ extension ViewController: UITableViewDataSource {
         //cell.avatarImageView.frame.size.height = 72.5
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 150
+    }
+}
+
+extension ViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = UIView()
+        
+        let logo = UIImage(named: "pokemon-logo")
+        let logoImageView = UIImageView(image: logo)
+        logoImageView.contentMode = .scaleAspectFit
+        logoImageView.frame.size = CGSize(width: logoImageView.frame.size.width, height: logoImageView.frame.size.height + 0.5)
+        header.addSubview(logoImageView)
+        return header
+    }
 }
 
 private extension PokemonTableViewCell {
