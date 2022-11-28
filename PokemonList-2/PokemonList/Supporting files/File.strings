@@ -1,0 +1,17 @@
+/* 
+  File.strings
+  PokemonList
+
+  Created by Nazariy Vlizlo on 09.10.2019.
+  Copyright © 2019 Nazariy Vlizlo. All rights reserved.
+*/
+
+
+
+/* 1) ?.optimizeImage() // <--------------- solution for blended layers
+2) logoImageView.align() <------------------ improving misaligned images
+3) ?.optimizeImage() // <--------------- solution for blended layers
+4) image = image?.optimizeSize(size: CGSize(width: 72, height: 72)) // <------------------- solution for misaligned images
+5) image = image?.roundedImage(sizeToRound: CGSize(width: 72, height: 72))
+6) avatarImageView.addShadowPath() // <------------------- Off-screen rendered shadows fix
+*/
