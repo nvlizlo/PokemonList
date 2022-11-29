@@ -18,7 +18,7 @@ extension UIView {
     }
     
     func addShadowPath() {
-        let path = UIBezierPath.init(roundedRect: self.bounds, cornerRadius: 15)
+        let path = UIBezierPath.init(roundedRect: self.bounds, cornerRadius: 72)
         layer.shadowPath = path.cgPath
     }
 }
@@ -55,11 +55,19 @@ extension UIImage {
         let rect = CGRect(origin: .zero, size: sizeToRound)
         
         UIGraphicsBeginImageContextWithOptions(sizeToRound, false, UIScreen.main.scale)
-        let path = UIBezierPath(roundedRect: rect, cornerRadius: sizeToRound.height)
+		let pathB = UIBezierPath(roundedRect: rect, cornerRadius: sizeToRound.height)
+		UIGraphicsGetCurrentContext()?.addPath(pathB.cgPath)
+		UIColor.lightGray.setFill()
+		pathB.fill()
+		UIGraphicsGetCurrentContext()?.clip()
+		
+		let path = UIBezierPath(roundedRect: .init(origin: .init(x: rect.origin.x + 2, y: rect.origin.y + 2), size: .init(width: rect.size.width - 4, height: rect.size.height - 4)), cornerRadius: sizeToRound.height)
         UIGraphicsGetCurrentContext()?.addPath(path.cgPath)
         UIColor.white.setFill()
         path.fill()
         UIGraphicsGetCurrentContext()?.clip()
+		
+		
         
         draw(in: rect)
         let image = UIGraphicsGetImageFromCurrentImageContext()

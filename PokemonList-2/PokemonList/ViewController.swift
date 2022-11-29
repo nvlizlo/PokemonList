@@ -49,26 +49,13 @@ extension ViewController: UITableViewDataSource {
 	}
 }
 
-private extension ViewController {
-    func loadPokemons() {
-        Pokemon.loadPokemons { [weak self] object in
-            self?.pokemons = object
-            DispatchQueue.main.async {
-                self?.pokemonTableView.reloadData()
-            }
-        }
-    }
-}
-
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let logo = UIImage(named: "pokemon-logo")//?.optimizeImage() // <--------------- solution for blended layers
+        let logo = UIImage(named: "pokemon-logo")
         let logoImageView = UIImageView(image: logo)
         logoImageView.contentMode = .scaleAspectFit
-        logoImageView.frame.size = CGSize(width: logoImageView.frame.size.width,
-                                          height: logoImageView.frame.size.height + Constants.logoOffsetHeight)
+		logoImageView.frame.size = headerSize(logoImageView.frame.size)
 		logoImageView.frame.origin = Constants.headerOrigin
-        //logoImageView.align() // <------------------ improving misaligned images
         logoImageView.isOpaque = true
         
         let header = UIView()
@@ -77,17 +64,11 @@ extension ViewController: UITableViewDelegate {
     }
 	
 	func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-		let imageName = "footer.jpg"
-		let path = Bundle.main.path(forResource: imageName, ofType: nil)
-		let image: UIImage! = .init(contentsOfFile: path!)
-		let image2 = image.optimizeSize(size: .init(width: UIScreen.main.bounds.width, height: 200))
+		let footerImage = footerImage()
 		let footer = UIView()
 		
-		
-		let image3 = image2!.redraw() // color copied images
-		
-		let imageView = UIImageView(image: image2)
-		imageView.frame.size = .init(width: UIScreen.main.bounds.width, height: 1000)
+		let imageView = UIImageView(image: footerImage)
+		imageView.frame.size = .init(width: UIScreen.main.bounds.width, height: Constants.tableFooterHeight)
 		footer.addSubview(imageView)
 		return footer
 	}
@@ -96,22 +77,38 @@ extension ViewController: UITableViewDelegate {
 private extension PokemonTableViewCell {
     func setupWith(pokemon: Pokemon) {
         avatarImageView.layer.masksToBounds = true
-        var image = UIImage.init(named: pokemon.name)//?.optimizeImage() // <--------------- solution for blended layers
-        
-        // image = image?.optimizeSize(size: CGSize(width: 72, height: 72)) // <------------------- solution for misaligned images
-        
+        var image = UIImage.init(named: pokemon.name)
         
         avatarImageView.layer.cornerRadius = avatarImageView.frame.size.height / 2
         avatarImageView.layer.borderColor = UIColor.lightGray.cgColor
         avatarImageView.layer.borderWidth = 2
-        
-        // image = image?.roundedImage(sizeToRound: CGSize(width: 72, height: 72))
-        
+                
         avatarImageView.layer.shadowRadius = 30
         avatarImageView.layer.shadowOpacity = 0.25
-        // avatarImageView.addShadowPath() // <------------------- Off-screen rendered shadows fix
         
         avatarImageView.image = image
         nameLabel.text = pokemon.name
     }
+}
+
+private extension ViewController {
+	func loadPokemons() {
+		Pokemon.loadPokemons { [weak self] object in
+			self?.pokemons = object
+			DispatchQueue.main.async {
+				self?.pokemonTableView.reloadData()
+			}
+		}
+	}
+	
+	func footerImage() -> UIImage {
+		let imageName = "footer.jpg"
+		let path = Bundle.main.path(forResource: imageName, ofType: nil)
+		let image: UIImage = .init(contentsOfFile: path!)!
+		return image.optimizeSize(size: .init(width: UIScreen.main.bounds.width, height: 200))!
+	}
+	
+	func headerSize(_ size: CGSize) -> CGSize {
+		return .init(width: size.width, height: size.height + Constants.logoOffsetHeight)
+	}
 }
